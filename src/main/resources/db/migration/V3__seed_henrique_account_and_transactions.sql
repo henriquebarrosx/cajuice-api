@@ -1,5 +1,5 @@
-INSERT INTO accounts (telegram_id, first_name, username, language_code, is_bot, is_premium)
-VALUES (1310206331, 'Henrique', 'henriquebarrosx', 'pt-br', FALSE, FALSE);
+INSERT INTO accounts (telegram_id, first_name, username)
+VALUES (1310206331, 'Henrique', 'henriquebarrosx');
 
 
 INSERT INTO transactions (account_id, period, description, amount, transaction_type, is_settled)
