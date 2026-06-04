@@ -20,7 +20,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -29,6 +32,9 @@ import lombok.Setter;
 })
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
 
 	@Id
@@ -53,7 +59,7 @@ public class Transaction {
 	private TipoTransacao transactionType;
 
 	@Column(name = "is_settled", nullable = false)
-	private Boolean isSettled = false;
+	private Boolean isSettled;
 
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;

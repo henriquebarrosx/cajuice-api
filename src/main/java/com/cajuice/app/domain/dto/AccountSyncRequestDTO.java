@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Dados enviados pelo Bot para sincronização da conta do utilizador")
-public class AccountSyncRequest {
+public class AccountSyncRequestDTO {
 
 	@Schema(description = "ID único do usuário fornecido pelo Telegram", example = "123456789", requiredMode = Schema.RequiredMode.REQUIRED)
 	@NotNull(message = "O telegramId não pode ser nulo")

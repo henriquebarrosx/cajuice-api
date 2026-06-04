@@ -2,7 +2,7 @@ package com.cajuice.app.service;
 
 import org.springframework.stereotype.Service;
 
-import com.cajuice.app.domain.dto.AccountSyncRequest;
+import com.cajuice.app.domain.dto.AccountSyncRequestDTO;
 import com.cajuice.app.domain.entity.Account;
 import com.cajuice.app.repository.AccountRepository;
 
@@ -14,7 +14,7 @@ public class AccountService {
 
 	private final AccountRepository accountRepository;
 
-	public Account syncAccount(AccountSyncRequest request) {
+	public Account syncAccount(AccountSyncRequestDTO request) {
 		Account account = accountRepository.findByTelegramId(request.getTelegramId())
 				.orElseGet(() -> Account.builder()
 						.telegramId(request.getTelegramId())
@@ -24,6 +24,11 @@ public class AccountService {
 						.build());
 
 		return accountRepository.save(account);
+	}
+
+	public Account getByTelegramId(Long telegramId) {
+		return accountRepository.findByTelegramId(telegramId)
+				.orElseThrow();
 	}
 
 }

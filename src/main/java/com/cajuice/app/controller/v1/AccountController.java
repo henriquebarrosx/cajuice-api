@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cajuice.app.domain.dto.AccountSyncRequest;
+import com.cajuice.app.domain.dto.AccountSyncRequestDTO;
 import com.cajuice.app.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
-@Tag(name = "Contas (V1)", description = "Endpoints para gestão de usuários vindos do Telegram")
+@Tag(name = "Contas", description = "Endpoints para gestão de usuários vindos do Telegram")
 public class AccountController {
 
 	private final AccountService accountService;
@@ -30,7 +30,7 @@ public class AccountController {
 			@ApiResponse(responseCode = "400", description = "Dados da requisição inválidos")
 	})
 	@PostMapping("/sync")
-	public ResponseEntity<Void> syncTelegramAccount(@Valid @RequestBody AccountSyncRequest request) {
+	public ResponseEntity<Void> syncTelegramAccount(@Valid @RequestBody AccountSyncRequestDTO request) {
 		accountService.syncAccount(request);
 		return ResponseEntity.noContent().build();
 	}
