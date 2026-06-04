@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS transactions (
         ON DELETE CASCADE,
         
     CONSTRAINT chk_transaction_type
-        CHECK (transaction_type IN ('receita', 'despesa'))
+        CHECK (transaction_type IN ('RECEITA', 'DESPESA'))
 );
 
 
