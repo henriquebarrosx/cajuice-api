@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.cajuice.app.domain.dto.AccountSyncRequestDTO;
 import com.cajuice.app.domain.entity.Account;
+import com.cajuice.app.exception.NotFoundException;
 import com.cajuice.app.repository.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class AccountService {
 
 	public Account getByTelegramId(Long telegramId) {
 		return accountRepository.findByTelegramId(telegramId)
-				.orElseThrow();
+				.orElseThrow(() -> new NotFoundException("Account not found"));
 	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.cajuice.app.domain.dto.CreateTransactionRequestDTO;
 import com.cajuice.app.domain.entity.Account;
 import com.cajuice.app.domain.entity.Transaction;
+import com.cajuice.app.exception.NotFoundException;
 import com.cajuice.app.repository.TransactionRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,18 @@ public class TransactionService {
 		return transactionRepository.save(transaction);
 	}
 
+	public Transaction getById(Long id) {
+		return transactionRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Transaction not found"));
+	}
+
 	public List<Transaction> getBetweenDates(Long telegramId, LocalDate startAt, LocalDate endAt) {
 		return transactionRepository.findByAccountTelegramIdAndPeriodBetween(telegramId, startAt, endAt);
+	}
+
+	public void deleteById(Long id) {
+		Transaction transaction = getById(id);
+		transactionRepository.delete(transaction);
 	}
 
 }

@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,7 @@ public class TransactionController {
 
 	private final TransactionService transactionService;
 
-	@Operation(summary = "Cria uma nova transação", description = "Vincula uma nova receita ou despesa à conta informada pelo telegramId.")
+	@Operation(summary = "Cria uma nova transação")
 	@PostMapping()
 	public ResponseEntity<TransactionResponseDTO> createTransaction(
 			@Valid @RequestBody CreateTransactionRequestDTO request) {
@@ -48,7 +50,7 @@ public class TransactionController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
-	@Operation(summary = "Realiza o extrato entre duas datas", description = "Vincula uma nova receita ou despesa à conta informada pelo telegramId.")
+	@Operation(summary = "Realiza o extrato entre duas datas")
 	@GetMapping()
 	public ResponseEntity<List<TransactionResponseDTO>> getTransactions(
 			@RequestParam Long telegramId, @RequestParam LocalDate startAt, @RequestParam LocalDate endAt) {
@@ -66,6 +68,13 @@ public class TransactionController {
 				.toList();
 
 		return ResponseEntity.ok().body(response);
+	}
+
+	@Operation(summary = "Realiza a exclusão de uma transação")
+	@DeleteMapping("{id}")
+	public ResponseEntity<List<TransactionResponseDTO>> deleteTransaction(@PathVariable("id") Long id) {
+		transactionService.deleteById(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }
