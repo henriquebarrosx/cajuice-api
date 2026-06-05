@@ -3,6 +3,7 @@ package com.cajuice.app.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.cajuice.app.domain.dto.PartialUpdateTransactionRequestDTO;
 import org.springframework.stereotype.Service;
 
 import com.cajuice.app.domain.dto.CreateTransactionRequestDTO;
@@ -47,6 +48,24 @@ public class TransactionService {
     public void deleteById(Long id) {
         Transaction transaction = getById(id);
         transactionRepository.delete(transaction);
+    }
+
+    public Transaction update(Long id, PartialUpdateTransactionRequestDTO request) {
+        Transaction transaction = getById(id);
+
+        if (request.amount().isPresent()) {
+            transaction.setAmount(request.amount().get());
+        }
+
+        if (request.description().isPresent()) {
+            transaction.setDescription(request.description().get());
+        }
+
+        if (request.isSettled().isPresent()) {
+            transaction.setIsSettled(request.isSettled().get());
+        }
+
+        return transactionRepository.save(transaction);
     }
 
 }
