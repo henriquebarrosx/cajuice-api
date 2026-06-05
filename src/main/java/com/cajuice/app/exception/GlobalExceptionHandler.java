@@ -20,44 +20,44 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<ExceptionDTO> handleNotFoundException(Exception ex, HttpServletRequest request) {
-		ExceptionDTO response = new ExceptionDTO(
-				LocalDateTime.now(),
-				HttpStatus.NOT_FOUND.value(),
-				"Not found",
-				ex.getMessage(),
-				getDecodedPath(request),
-				null);
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ExceptionDTO> handleNotFoundException(Exception ex, HttpServletRequest request) {
+        ExceptionDTO response = new ExceptionDTO(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "Not found",
+                ex.getMessage(),
+                getDecodedPath(request),
+                null);
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-	}
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ExceptionDTO> handleValidationExceptions(
-			MethodArgumentNotValidException ex, HttpServletRequest request) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionDTO> handleValidationExceptions(
+            MethodArgumentNotValidException ex, HttpServletRequest request) {
 
-		Map<String, String> validationErrors = new HashMap<>();
+        Map<String, String> validationErrors = new HashMap<>();
 
-		ex.getBindingResult().getAllErrors().forEach((error) -> {
-			String fieldName = ((FieldError) error).getField();
-			String errorMessage = error.getDefaultMessage();
-			validationErrors.put(fieldName, errorMessage);
-		});
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            validationErrors.put(fieldName, errorMessage);
+        });
 
-		ExceptionDTO response = new ExceptionDTO(
-				LocalDateTime.now(),
-				HttpStatus.BAD_REQUEST.value(),
-				"Bad Request",
-				"Erro de validação nos campos enviados.",
-				getDecodedPath(request),
-				validationErrors);
+        ExceptionDTO response = new ExceptionDTO(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                "Erro de validação nos campos enviados.",
+                getDecodedPath(request),
+                validationErrors);
 
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-	}
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 
-	private String getDecodedPath(HttpServletRequest request) {
-		return request.getRequestURI();
-	}
+    private String getDecodedPath(HttpServletRequest request) {
+        return request.getRequestURI();
+    }
 
 }

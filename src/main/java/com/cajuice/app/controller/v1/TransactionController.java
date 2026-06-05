@@ -30,51 +30,51 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Transações", description = "Endpoints para gestão de transações")
 public class TransactionController {
 
-	private final TransactionService transactionService;
+    private final TransactionService transactionService;
 
-	@Operation(summary = "Cria uma nova transação")
-	@PostMapping()
-	public ResponseEntity<TransactionResponseDTO> createTransaction(
-			@Valid @RequestBody CreateTransactionRequestDTO request) {
-		Transaction transaction = transactionService.create(request);
+    @Operation(summary = "Cria uma nova transação")
+    @PostMapping()
+    public ResponseEntity<TransactionResponseDTO> createTransaction(
+            @Valid @RequestBody CreateTransactionRequestDTO request) {
+        Transaction transaction = transactionService.create(request);
 
-		TransactionResponseDTO response = TransactionResponseDTO.builder()
-				.telegramId(request.getTelegramId())
-				.amount(transaction.getAmount())
-				.description(transaction.getDescription())
-				.transactionType(transaction.getTransactionType())
-				.period(transaction.getPeriod())
-				.isSettled(transaction.getIsSettled())
-				.build();
+        TransactionResponseDTO response = TransactionResponseDTO.builder()
+                .telegramId(request.getTelegramId())
+                .amount(transaction.getAmount())
+                .description(transaction.getDescription())
+                .transactionType(transaction.getTransactionType())
+                .period(transaction.getPeriod())
+                .isSettled(transaction.getIsSettled())
+                .build();
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
-	}
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
-	@Operation(summary = "Realiza o extrato entre duas datas")
-	@GetMapping()
-	public ResponseEntity<List<TransactionResponseDTO>> getTransactions(
-			@RequestParam Long telegramId, @RequestParam LocalDate startAt, @RequestParam LocalDate endAt) {
-		List<Transaction> transactions = transactionService.getBetweenDates(telegramId, startAt, endAt);
+    @Operation(summary = "Realiza o extrato entre duas datas")
+    @GetMapping()
+    public ResponseEntity<List<TransactionResponseDTO>> getTransactions(
+            @RequestParam Long telegramId, @RequestParam LocalDate startAt, @RequestParam LocalDate endAt) {
+        List<Transaction> transactions = transactionService.getBetweenDates(telegramId, startAt, endAt);
 
-		List<TransactionResponseDTO> response = transactions.stream()
-				.map(transaction -> TransactionResponseDTO.builder()
-						.telegramId(telegramId)
-						.amount(transaction.getAmount())
-						.description(transaction.getDescription())
-						.transactionType(transaction.getTransactionType())
-						.period(transaction.getPeriod())
-						.isSettled(transaction.getIsSettled())
-						.build())
-				.toList();
+        List<TransactionResponseDTO> response = transactions.stream()
+                .map(transaction -> TransactionResponseDTO.builder()
+                        .telegramId(telegramId)
+                        .amount(transaction.getAmount())
+                        .description(transaction.getDescription())
+                        .transactionType(transaction.getTransactionType())
+                        .period(transaction.getPeriod())
+                        .isSettled(transaction.getIsSettled())
+                        .build())
+                .toList();
 
-		return ResponseEntity.ok().body(response);
-	}
+        return ResponseEntity.ok().body(response);
+    }
 
-	@Operation(summary = "Realiza a exclusão de uma transação")
-	@DeleteMapping("{id}")
-	public ResponseEntity<List<TransactionResponseDTO>> deleteTransaction(@PathVariable("id") Long id) {
-		transactionService.deleteById(id);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-	}
+    @Operation(summary = "Realiza a exclusão de uma transação")
+    @DeleteMapping("{id}")
+    public ResponseEntity<List<TransactionResponseDTO>> deleteTransaction(@PathVariable Long id) {
+        transactionService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }

@@ -22,25 +22,25 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Dados enviados pelo Bot para criação de uma transação")
 public class CreateTransactionRequestDTO {
 
-	@Schema(description = "ID único do usuário fornecido pelo Telegram", example = "123456789", requiredMode = Schema.RequiredMode.REQUIRED)
-	@NotNull(message = "O telegramId não pode ser nulo")
-	private Long telegramId;
+    @Schema(description = "ID único do usuário fornecido pelo Telegram", example = "123456789", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "O telegramId não pode ser nulo")
+    private Long telegramId;
 
-	@NotNull(message = "O valor da transação é obrigatório")
-	@DecimalMin(value = "0.01", message = "O valor da transação deve ser maior que zero")
-	private BigDecimal amount;
+    @NotNull(message = "O valor da transação é obrigatório")
+    @DecimalMin(value = "0.01", message = "O valor da transação deve ser maior que zero")
+    private BigDecimal amount;
 
-	@NotBlank(message = "A descrição é obrigatória")
-	@Size(max = 256, message = "A descrição não pode passar de 256 caracteres")
-	private String description;
+    @NotBlank(message = "A descrição é obrigatória")
+    @Size(max = 256, message = "A descrição não pode passar de 256 caracteres")
+    private String description;
 
-	@NotNull(message = "O tipo de transação (RECEITA/DESPESA) é obrigatório")
-	private TipoTransacao transactionType;
+    @NotNull(message = "O tipo de transação (RECEITA/DESPESA) é obrigatório")
+    private TipoTransacao transactionType;
 
-	@NotNull(message = "O período/data da transação é obrigatório")
-	private LocalDate period;
+    @NotNull(message = "O período/data da transação é obrigatório")
+    private LocalDate period;
 
-	@NotNull(message = "O status de efetivação deve ser informado")
-	private Boolean isSettled;
+    @NotNull(message = "O status de efetivação deve ser informado")
+    private Boolean isSettled;
 
 }

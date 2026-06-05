@@ -11,9 +11,9 @@ import com.cajuice.app.domain.entity.Transaction;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-	public List<Transaction> findByAccountTelegramIdAndPeriodBetween(
-			Long telegramId,
-			LocalDate startDate,
-			LocalDate endDate);
+    public List<Transaction> findByAccountTelegramIdAndPeriodBetween(
+            Long telegramId,
+            LocalDate startDate,
+            LocalDate endDate);
 
 }

@@ -13,23 +13,23 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class AccountService {
 
-	private final AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
-	public Account syncAccount(AccountSyncRequestDTO request) {
-		Account account = accountRepository.findByTelegramId(request.getTelegramId())
-				.orElseGet(() -> Account.builder()
-						.telegramId(request.getTelegramId())
-						.firstName(request.getFirstName())
-						.lastName(request.getLastName())
-						.username(request.getUsername())
-						.build());
+    public void syncAccount(AccountSyncRequestDTO request) {
+        Account account = accountRepository.findByTelegramId(request.getTelegramId())
+                .orElseGet(() -> Account.builder()
+                        .telegramId(request.getTelegramId())
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .username(request.getUsername())
+                        .build());
 
-		return accountRepository.save(account);
-	}
+        accountRepository.save(account);
+    }
 
-	public Account getByTelegramId(Long telegramId) {
-		return accountRepository.findByTelegramId(telegramId)
-				.orElseThrow(() -> new NotFoundException("Account not found"));
-	}
+    public Account getByTelegramId(Long telegramId) {
+        return accountRepository.findByTelegramId(telegramId)
+                .orElseThrow(() -> new NotFoundException("Account not found"));
+    }
 
 }

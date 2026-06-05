@@ -22,17 +22,22 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Contas", description = "Endpoints para gestão de usuários vindos do Telegram")
 public class AccountController {
 
-	private final AccountService accountService;
+    private final AccountService accountService;
 
-	@Operation(summary = "Sincroniza conta do Telegram sem retorno de conteúdo", description = "Garante a existência da conta pelo telegram_id (Just-in-Time)")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "204", description = "Sincronização processada com sucesso (Sem conteúdo)"),
-			@ApiResponse(responseCode = "400", description = "Dados da requisição inválidos")
-	})
-	@PostMapping("/sync")
-	public ResponseEntity<Void> syncTelegramAccount(@Valid @RequestBody AccountSyncRequestDTO request) {
-		accountService.syncAccount(request);
-		return ResponseEntity.noContent().build();
-	}
+    @Operation(
+            summary = "Sincroniza conta do Telegram sem retorno de conteúdo",
+            description = "Garante a existência da conta pelo telegram_id (Just-in-Time)"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "204", description = "Sincronização processada com sucesso (Sem conteúdo)"),
+                    @ApiResponse(responseCode = "400", description = "Dados da requisição inválidos")
+            }
+    )
+    @PostMapping("/sync")
+    public ResponseEntity<Void> syncTelegramAccount(@Valid @RequestBody AccountSyncRequestDTO request) {
+        accountService.syncAccount(request);
+        return ResponseEntity.noContent().build();
+    }
 
 }

@@ -10,6 +10,6 @@ import com.cajuice.app.domain.entity.Account;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-	Optional<Account> findByTelegramId(Long telegramId);
+    Optional<Account> findByTelegramId(Long telegramId);
 
 }
