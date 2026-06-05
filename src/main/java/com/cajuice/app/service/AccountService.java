@@ -15,7 +15,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public void syncAccount(AccountSyncRequestDTO request) {
+    public Account syncAccount(AccountSyncRequestDTO request) {
         Account account = accountRepository.findByTelegramId(request.getTelegramId())
                 .orElseGet(() -> Account.builder()
                         .telegramId(request.getTelegramId())
@@ -24,7 +24,7 @@ public class AccountService {
                         .username(request.getUsername())
                         .build());
 
-        accountRepository.save(account);
+        return accountRepository.save(account);
     }
 
     public Account getByTelegramId(Long telegramId) {

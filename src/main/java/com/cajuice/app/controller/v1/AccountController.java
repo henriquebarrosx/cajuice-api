@@ -1,5 +1,8 @@
 package com.cajuice.app.controller.v1;
 
+import com.cajuice.app.domain.dto.AccountResponseDTO;
+import com.cajuice.app.domain.entity.Account;
+import com.cajuice.app.domain.mapper.AccountMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountController {
 
     private final AccountService accountService;
+    private final AccountMapper accountMapper;
 
     @Operation(
             summary = "Sincroniza conta do Telegram sem retorno de conteúdo",
@@ -35,9 +39,10 @@ public class AccountController {
             }
     )
     @PostMapping("/sync")
-    public ResponseEntity<Void> syncTelegramAccount(@Valid @RequestBody AccountSyncRequestDTO request) {
-        accountService.syncAccount(request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<AccountResponseDTO> syncTelegramAccount(@Valid @RequestBody AccountSyncRequestDTO request) {
+        Account account = accountService.syncAccount(request);
+        AccountResponseDTO response = accountMapper.toResponseDTO(account);
+        return ResponseEntity.ok().body(response);
     }
 
 }
