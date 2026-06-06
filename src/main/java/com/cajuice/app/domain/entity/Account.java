@@ -44,7 +44,7 @@ public class Account {
     @Column(name = "last_name", length = 128)
     private String lastName;
 
-    @Column(name = "username", length = 64)
+    @Column(name = "username", length = 64, unique = true)
     private String username;
 
     @Column(name = "created_at", updatable = false)
