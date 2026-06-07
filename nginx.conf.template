@@ -35,22 +35,27 @@ http {
         listen 80;
         server_name localhost;
 
+        # Mapeamento dos códigos de erro para respostas JSON limpas
+        error_page 401 @unauthorized;
+        error_page 403 @forbidden;
+        error_page 429 @rate_limited;
+
         location / {
+            limit_req_status 429;
+
             if ($http_authorization != "Bearer ${ACCESS_TOKEN}") {
-                add_header Content-Type application/json;
-                return 401 '{"timestamp": "$time_iso8601", "status": 401, "error": "Unauthorized", "message": "Token de autenticação inválido ou ausente."}';
+                return 401;
             }
 
             if ($http_x_telegram_id = "") {
-                add_header Content-Type application/json;
-                return 403 '{"timestamp": "$time_iso8601", "status": 403, "error": "Forbidden", "message": "Acesso negado. Cabeçalho X-Telegram-Id ausente."}';
+                return 403;
             }
 
-            # Rate Limits
+            # 2. Rate Limits
             limit_req zone=limite_por_ip burst=5 nodelay;
             limit_req zone=limite_por_usuario burst=2 nodelay;
 
-            # Proxy Configs
+            # 3. Proxy Configs
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -62,7 +67,17 @@ http {
             proxy_read_timeout    60s;
         }
 
-        error_page 503 @rate_limited;
+        # Sub-locations que tratam e respondem o JSON sem sofrer interferência do envsubst
+        location @unauthorized {
+            default_type application/json;
+            return 401 '{"timestamp": "$time_iso8601", "status": 401, "error": "Unauthorized", "message": "Token de autenticação inválido ou ausente."}';
+        }
+
+        location @forbidden {
+            default_type application/json;
+            return 403 '{"timestamp": "$time_iso8601", "status": 403, "error": "Forbidden", "message": "Acesso negado. Cabeçalho X-Telegram-Id ausente."}';
+        }
+
         location @rate_limited {
             default_type application/json;
             return 429 '{"timestamp": "$time_iso8601", "status": 429, "error": "Too Many Requests", "message": "Muitas requisições. Por favor, aguarde um momento."}';
