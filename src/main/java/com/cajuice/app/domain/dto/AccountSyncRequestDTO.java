@@ -17,10 +17,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Dados enviados pelo Bot para sincronização da conta do utilizador")
 public class AccountSyncRequestDTO {
 
-    @Schema(description = "ID único do usuário fornecido pelo Telegram", example = "123456789", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "O telegramId não pode ser nulo")
-    private Long telegramId;
-
     @Schema(description = "Primeiro nome do usuário", example = "John", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "O primeiro nome é obrigatório")
     @Size(max = 128, message = "O primeiro nome não pode passar de 128 caracteres")

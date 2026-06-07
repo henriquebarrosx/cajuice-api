@@ -4,10 +4,7 @@ import com.cajuice.app.domain.dto.AccountResponseDTO;
 import com.cajuice.app.domain.entity.Account;
 import com.cajuice.app.domain.mapper.AccountMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cajuice.app.domain.dto.AccountSyncRequestDTO;
 import com.cajuice.app.service.AccountService;
@@ -39,8 +36,11 @@ public class AccountController {
             }
     )
     @PostMapping("/sync")
-    public ResponseEntity<AccountResponseDTO> syncTelegramAccount(@Valid @RequestBody AccountSyncRequestDTO request) {
-        Account account = accountService.syncAccount(request);
+    public ResponseEntity<AccountResponseDTO> syncTelegramAccount(
+            @RequestHeader("X-Telegram-Id") String telegramId,
+            @Valid @RequestBody AccountSyncRequestDTO request
+    ) {
+        Account account = accountService.syncAccount(Long.valueOf(telegramId), request);
         AccountResponseDTO response = accountMapper.toResponseDTO(account);
         return ResponseEntity.ok().body(response);
     }

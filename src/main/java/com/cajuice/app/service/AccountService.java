@@ -15,10 +15,10 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public Account syncAccount(AccountSyncRequestDTO request) {
-        Account account = accountRepository.findByTelegramId(request.getTelegramId())
+    public Account syncAccount(Long telegramId, AccountSyncRequestDTO request) {
+        Account account = accountRepository.findByTelegramId(telegramId)
                 .orElseGet(() -> Account.builder()
-                        .telegramId(request.getTelegramId())
+                        .telegramId(telegramId)
                         .firstName(request.getFirstName())
                         .lastName(request.getLastName())
                         .username(request.getUsername())
