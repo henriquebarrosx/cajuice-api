@@ -36,6 +36,11 @@ http {
         server_name localhost;
 
         location / {
+            if ($http_authorization != "Bearer ${ACCESS_TOKEN}") {
+                add_header Content-Type application/json;
+                return 401 '{"timestamp": "$time_iso8601", "status": 401, "error": "Unauthorized", "message": "Token de autenticação inválido ou ausente."}';
+            }
+
             if ($http_x_telegram_id = "") {
                 add_header Content-Type application/json;
                 return 403 '{"timestamp": "$time_iso8601", "status": 403, "error": "Forbidden", "message": "Acesso negado. Cabeçalho X-Telegram-Id ausente."}';
