@@ -37,10 +37,10 @@ public class AccountController {
     )
     @PostMapping("/sync")
     public ResponseEntity<AccountResponseDTO> syncTelegramAccount(
-            @RequestHeader("X-Telegram-Id") String telegramId,
+            @RequestHeader("X-Telegram-Id") Long telegramId,
             @Valid @RequestBody AccountSyncRequestDTO request
     ) {
-        Account account = accountService.syncAccount(Long.valueOf(telegramId), request);
+        Account account = accountService.syncAccount(telegramId, request);
         AccountResponseDTO response = accountMapper.toResponseDTO(account);
         return ResponseEntity.ok().body(response);
     }

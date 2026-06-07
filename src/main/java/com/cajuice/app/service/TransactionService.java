@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.cajuice.app.domain.dto.PartialUpdateTransactionRequestDTO;
+import com.cajuice.app.exception.ForbiddenException;
 import org.springframework.stereotype.Service;
 
 import com.cajuice.app.domain.dto.CreateTransactionRequestDTO;
@@ -21,8 +22,8 @@ public class TransactionService {
     private final AccountService accountService;
     private final TransactionRepository transactionRepository;
 
-    public Transaction create(CreateTransactionRequestDTO request) {
-        Account account = accountService.getByTelegramId(request.getTelegramId());
+    public Transaction create(Long telegramId, CreateTransactionRequestDTO request) {
+        Account account = accountService.getByTelegramId(telegramId);
 
         Transaction transaction = Transaction.builder()
                 .account(account)
@@ -45,12 +46,18 @@ public class TransactionService {
         return transactionRepository.findByAccountTelegramIdAndPeriodBetween(telegramId, startAt, endAt);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id, Long telegramId) {
         Transaction transaction = getById(id);
-        transactionRepository.delete(transaction);
+
+        if (transaction.getAccount().getTelegramId().equals(telegramId)) {
+            transactionRepository.delete(transaction);
+            return;
+        }
+
+        throw new ForbiddenException("Você não possui autorizaçao para exclusão dessa transação");
     }
 
-    public Transaction update(Long id, PartialUpdateTransactionRequestDTO request) {
+    public Transaction update(Long id, Long telegramId, PartialUpdateTransactionRequestDTO request) {
         Transaction transaction = getById(id);
 
         if (request.amount().isPresent()) {
@@ -65,7 +72,11 @@ public class TransactionService {
             transaction.setIsSettled(request.isSettled().get());
         }
 
-        return transactionRepository.save(transaction);
+        if (transaction.getAccount().getTelegramId().equals(telegramId)) {
+            return transactionRepository.save(transaction);
+        }
+
+        throw new ForbiddenException("Você não possui autorizaçao para edição dessa transação");
     }
 
 }

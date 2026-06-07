@@ -22,10 +22,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Dados enviados pelo Bot para criação de uma transação")
 public class CreateTransactionRequestDTO {
 
-    @Schema(description = "ID único do usuário fornecido pelo Telegram", example = "123456789", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "O telegramId não pode ser nulo")
-    private Long telegramId;
-
     @NotNull(message = "O valor da transação é obrigatório")
     @DecimalMin(value = "0.01", message = "O valor da transação deve ser maior que zero")
     private BigDecimal amount;

@@ -31,8 +31,10 @@ public class TransactionController {
     @Operation(summary = "Cria uma nova transação")
     @PostMapping()
     public ResponseEntity<TransactionResponseDTO> createTransaction(
-            @Valid @RequestBody CreateTransactionRequestDTO request) {
-        Transaction transaction = transactionService.create(request);
+            @RequestHeader("X-Telegram-Id") Long telegramId,
+            @Valid @RequestBody CreateTransactionRequestDTO request
+    ) {
+        Transaction transaction = transactionService.create(telegramId, request);
         TransactionResponseDTO response = transactionMapper.toResponseDTO(transaction);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -40,7 +42,9 @@ public class TransactionController {
     @Operation(summary = "Realiza o extrato entre duas datas")
     @GetMapping()
     public ResponseEntity<List<TransactionResponseDTO>> getTransactions(
-            @RequestParam Long telegramId, @RequestParam LocalDate startAt, @RequestParam LocalDate endAt) {
+            @RequestHeader("X-Telegram-Id") Long telegramId,
+            @RequestParam LocalDate startAt, @RequestParam LocalDate endAt
+    ) {
         List<Transaction> transactions = transactionService.getBetweenDates(telegramId, startAt, endAt);
 
         List<TransactionResponseDTO> response = transactions.stream()
@@ -52,18 +56,22 @@ public class TransactionController {
 
     @Operation(summary = "Realiza a exclusão de uma transação")
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        transactionService.deleteById(id);
+    public ResponseEntity<Void> deleteTransaction(
+            @RequestHeader("X-Telegram-Id") Long telegramId,
+            @PathVariable Long id
+    ) {
+        transactionService.deleteById(id, telegramId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Operation(summary = "Realiza a atualização parcial de uma transação")
     @PatchMapping("{id}")
     public ResponseEntity<TransactionResponseDTO> updateTransaction(
+            @RequestHeader("X-Telegram-Id") Long telegramId,
             @PathVariable Long id,
             @Valid @RequestBody PartialUpdateTransactionRequestDTO request) {
 
-        Transaction transaction = transactionService.update(id, request);
+        Transaction transaction = transactionService.update(id, telegramId, request);
         TransactionResponseDTO response = transactionMapper.toResponseDTO(transaction);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
