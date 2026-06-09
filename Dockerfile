@@ -1,20 +1,19 @@
-# Estágio 1: Compilação (Build)
-FROM maven:3.9-eclipse-temurin-25-alpine AS build
-WORKDIR /build
+FROM maven:3.9-eclipse-temurin-24-alpine AS base
+WORKDIR /usr/src/app
 
-# Copia os arquivos de configuração do Maven e o código fonte
+FROM base AS install
+COPY pom.xml .
+RUN mvn verify -DskipTests -B --fail-at-end || true
+
+FROM base AS prerelease
+COPY --from=install /root/.m2 /root/.m2
 COPY pom.xml .
 COPY src ./src
+RUN mvn package -DskipTests -B
 
-# Compila o projeto gerando o JAR e pulando os testes para agilizar
-RUN mvn clean package -DskipTests
-
-# Estágio 2: Execução (Run)
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:24-jre-alpine AS release
 WORKDIR /app
-
-# Copia o JAR gerado no estágio anterior (Stage 0/Build) para o container final
-COPY --from=build /build/target/*.jar /app/app.jar
-
+COPY --from=prerelease /usr/src/app/target/*.jar ./app.jar
+USER guest
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
