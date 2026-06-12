@@ -19,15 +19,15 @@ public class AccountSyncRequestDTO {
 
     @Schema(description = "Primeiro nome do usuário", example = "John", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "O primeiro nome é obrigatório")
-    @Size(max = 128, message = "O primeiro nome não pode passar de 128 caracteres")
+    @Size(max = 20, message = "O primeiro nome não pode passar de 20 caracteres")
     private String firstName;
 
     @Schema(description = "Apelido/Sobrenome do usuário", example = "Doe")
-    @Size(max = 128, message = "O sobrenome não pode passar de 128 caracteres")
+    @Size(max = 20, message = "O sobrenome não pode passar de 20 caracteres")
     private String lastName;
 
     @Schema(description = "Username do Telegram (sem o @)", example = "johndoe")
-    @Size(max = 64, message = "O username não pode passar de 64 caracteres")
+    @Size(max = 20, message = "O username não pode passar de 20 caracteres")
     private String username;
 
 }

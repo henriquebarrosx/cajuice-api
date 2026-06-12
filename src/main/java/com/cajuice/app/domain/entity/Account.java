@@ -38,13 +38,13 @@ public class Account {
     @Column(name = "telegram_id", nullable = false, unique = true)
     private Long telegramId;
 
-    @Column(name = "first_name", nullable = false, length = 128)
+    @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
 
-    @Column(name = "last_name", length = 128)
+    @Column(name = "last_name", length = 20)
     private String lastName;
 
-    @Column(name = "username", length = 64, unique = true)
+    @Column(name = "username", length = 20, unique = true)
     private String username;
 
     @Column(name = "created_at", updatable = false)
