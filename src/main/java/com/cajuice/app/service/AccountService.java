@@ -17,12 +17,11 @@ public class AccountService {
 
     public Account syncAccount(Long telegramId, AccountSyncRequestDTO request) {
         Account account = accountRepository.findByTelegramId(telegramId)
-                .orElseGet(() -> Account.builder()
-                        .telegramId(telegramId)
-                        .firstName(request.getFirstName())
-                        .lastName(request.getLastName())
-                        .username(request.getUsername())
-                        .build());
+                .orElseGet(() -> Account.builder().telegramId(telegramId).build());
+
+        account.setFirstName(request.getFirstName());
+        account.setLastName(request.getLastName());
+        account.setUsername(request.getUsername());
 
         return accountRepository.save(account);
     }
